@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import { Select, MantineProvider } from '@mantine/core'
+import team from '../team.json'
 import '@mantine/core/styles.css';
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-
+const teams = team.map((x) => {
+  return {
+    value: String(x.name),
+    label: String(x.name)
+  }
+})
+console.log(teams)
 function App() {
   const [count, setCount] = useState(0)
 
@@ -15,7 +20,7 @@ function App() {
           <Select className='select'
             label="Pick A Team"
             placeholder='Pick Value'
-            data={['react', 'angular', 'vue', 'svelte']}
+            data={teams}
           />
         </MantineProvider>
       </div>
