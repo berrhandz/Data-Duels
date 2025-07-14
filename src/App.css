@@ -47,3 +47,19 @@
 .select {
   color: aqua;
 }
+
+.teamSelector {
+  display: flex;
+}
+
+.team1 {
+  margin-right: 200px;
+}
+
+.mainTable1 {
+  display: flexbox;
+}
+
+.mainTable2 {
+  display: flexbox;
+}

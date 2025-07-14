@@ -11,54 +11,54 @@ const teams = team.map((x) => {
 })
 console.log(teams)
 function App() {
-  const [team1, setTeam1] = useState('Team 1')
-
+  const columns = ['min', 'fg', '3pt', 'ft', 'oreb', 'dreb',
+  'reb', 'ast', 'stl', 'blk', 'to', 'pf', 'pts'
+  ]
+  const players = ['player1', 'player2', 'player3', 'player4', 'player5','2','2','4','2','3','e','3','4','4','']
+  const player = players.map(x => <Table.Td>{x}</Table.Td>)
+  const columnHeaders = columns.map(column => <Table.Th>{column}</Table.Th>)
+  const [value, setValue] = useState<string | null>('');
   function teamSelect() {
-    const [team1, setTeam1] = useState('Team 1')
     return <Select className='select'
       label="Pick A Team"
-      placeholder={team1}
+      placeholder={'Select Team'}
       data={teams}
-      value={team1 ? team1 : null}
-      onChange={(_value) => setTeam1(String(_value))}
-      allowDeselect
+      value={value}
+      onChange={e => setValue(e)}
     />
 
   }
+  
   return (
     <>
-      <div>
+    <div className='mainContainer'>
+      <div className='teamSelector'>
+        <div className='team1'>
+          <MantineProvider>
+            {teamSelect()}
+          </MantineProvider>
+        </div>
+        <div className='team2'>
+          <MantineProvider>
+            {teamSelect()}
+          </MantineProvider>
+        </div>
+      </div>
+      <div className='mainTable1'>
         <MantineProvider>
           <Table>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th colSpan={5}>Element position</Table.Th>
-                <Table.Th colSpan={5}>Element name</Table.Th>
+                {columnHeaders}
               </Table.Tr>
             </Table.Thead>
-            <Table.Tbody>{ }</Table.Tbody>
+             <Table.Tbody>
+              {player}
+             </Table.Tbody>
           </Table>
         </MantineProvider>
       </div>
-      <div>
-        <MantineProvider>
-          <Select className='select'
-            label="Pick A Team"
-            placeholder={team1}
-            data={teams}
-            defaultValue={'Pick a Team'}
-          />
-        </MantineProvider>
-      </div>
-      <div>
-        <MantineProvider>
-          <Select className='select'
-            label="Pick A Team"
-            placeholder={team1}
-            data={teams}
-          />
-        </MantineProvider>
-      </div>
+    </div>
     </>
   )
 }
