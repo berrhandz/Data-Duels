@@ -1,0 +1,5 @@
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+nba_api==1.1.10
+pydantic==1.10.11
+requests==2.31.0

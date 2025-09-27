@@ -21,17 +21,38 @@ function App() {
   const column = columns.map(column => <Table.Th>{column}</Table.Th>)
   const [value, setValue] = useState<string | null>('');
   console.log(players)
+  const [playerQuery, setPlayerQuery] = useState('LeBron James')
+  const [playerResult, setPlayerResult] = useState<any | null>(null)
+  const [loadingPlayer, setLoadingPlayer] = useState(false)
+  const [playerError, setPlayerError] = useState<string | null>(null)
   function teamSelect() {
     return <Select className='select'
       label="Pick A Team"
       placeholder={'Select Team'}
       data={teams}
       value={value}
-      onChange={e => setValue(e)}
+      onChange={(e) => setValue(e)}
     />
-
   }
 
+  const fetchPlayer = async (name: string) => {
+    setLoadingPlayer(true)
+    setPlayerError(null)
+    try {
+      const res = await fetch(`http://localhost:8000/api/player/${encodeURIComponent(name)}`)
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: res.statusText }))
+        throw new Error(err.detail || res.statusText)
+      }
+      const data = await res.json()
+      setPlayerResult(data)
+    } catch (e: any) {
+      setPlayerError(String(e.message || e))
+      setPlayerResult(null)
+    } finally {
+      setLoadingPlayer(false)
+    }
+  }
   return (
     <>
       <div className='mainContainer'>
@@ -43,12 +64,27 @@ function App() {
           </div>
         </div>
         <div className='mainTable1'>
-            <BuildTable
-              data={{
-                columnHeader: column,
-                players: player
-              }}
-            />
+          <BuildTable
+            data={{
+              columnHeader: column,
+              players: player
+            }}
+          />
+          <div style={{ marginTop: 20 }}>
+            <h3>Lookup player (calls local Python API)</h3>
+            <input value={playerQuery} onChange={(e) => setPlayerQuery(e.target.value)} />
+            <button onClick={() => fetchPlayer(playerQuery)} disabled={loadingPlayer}>Fetch</button>
+            {loadingPlayer && <div>Loading...</div>}
+            {playerError && <div style={{ color: 'red' }}>Error: {playerError}</div>}
+            {playerResult && (
+              <div style={{ marginTop: 10 }}>
+                <strong>{playerResult.player.get('full_name') || playerResult.player.get('display_first_last') || playerResult.player.full_name}</strong>
+                <div>Career seasons: {playerResult.career_stats.length}</div>
+                <div>Latest season sample:</div>
+                <pre style={{ whiteSpace: 'pre-wrap', maxHeight: 200, overflow: 'auto' }}>{JSON.stringify(playerResult.career_stats[0] || {}, null, 2)}</pre>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
