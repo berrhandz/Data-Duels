@@ -3,3 +3,7 @@ uvicorn[standard]==0.22.0
 nba_api==1.1.10
 pydantic==1.10.11
 requests==2.31.0
+
+# runtime deps required by nba_api
+numpy==1.26.4
+pandas==2.2.3
